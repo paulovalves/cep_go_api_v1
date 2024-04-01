@@ -9,7 +9,10 @@ import (
 	entity "models/entity"
 )
 
-var DB *gorm.DB
+var (
+	DB    *gorm.DB
+	table = "public.categories"
+)
 
 func SetDB(db *gorm.DB) {
 	DB = db
@@ -23,6 +26,17 @@ func GetCategories() ([]entity.Category, error) {
 	if err != nil {
 		log.Fatalf("Error while fetching categories: %v", err)
 		return nil, err
+	}
+
+	return data, nil
+}
+
+func GetCategoryById(id string) (entity.Category, error) {
+	var data entity.Category
+	err := DB.Table(table).Where("id = ?", id).Find(&data).Error
+	if err != nil {
+		log.Fatalf("Error while fetching category: %v", err)
+		return entity.Category{}, err
 	}
 
 	return data, nil
