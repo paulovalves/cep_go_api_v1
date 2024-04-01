@@ -1,27 +1,11 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"time"
+	"service"
 
-	entity "models/entity"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 func main() {
-	server := newServer()
-	server.run(":8080")
-}
-
-func newServer() *entity.Server {
-	return &entity.Server{
-		router: gin.Default(),
-	}
-}
-
-func (s *entity.Server) run(addr) {
-	r := s.router.Run(addr)
-	if r != nil {
-		log.Fatalf("Error while running server: %v", r)
-	}
+	service.Start(":8080")
 }
