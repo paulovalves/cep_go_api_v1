@@ -31,6 +31,7 @@ type Server struct {
 }
 
 func (s *Server) Run(addr string) {
+	s.router.GET("/api/v1/category/id/:id", controllers.GetCategoryById)
 	s.router.GET("/api/v1/category/all", controllers.GetCategories)
 	r := s.router.Run(addr)
 	if r != nil {
