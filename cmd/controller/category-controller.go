@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 	"service"
+	"utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,7 +25,10 @@ func GetCategories(c *gin.Context) {
 func GetCategoryById(c *gin.Context) {
 	id := c.Param("id")
 
-	log.Println("c ID: ", id)
+	if !utils.IsValidUUID(id) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid UUID"})
+		return
+	}
 	data, err := service.GetCategoryById(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
