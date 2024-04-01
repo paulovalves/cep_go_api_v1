@@ -4,13 +4,14 @@ package data
 
 import (
 	"log"
+	"service"
 
 	"github.com/jinzhu/gorm"
 )
 
-var DB *gorm.DB
-
-func Init() {
+func Init(DB *gorm.DB) *gorm.DB {
+	service.SetDB(DB)
+	log.Println("Connecting to database...")
 	var err error
 	DB, err = gorm.Open(
 		"postgres",
@@ -21,4 +22,8 @@ func Init() {
 	}
 
 	DB = DB.Unscoped()
+	DB.LogMode(true)
+	log.Println("Connected to database on port 5432")
+
+	return DB
 }

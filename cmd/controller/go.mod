@@ -1,1 +1,1 @@
-module controllers
+module controller
