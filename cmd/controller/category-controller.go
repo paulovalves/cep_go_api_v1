@@ -36,3 +36,16 @@ func GetCategoryById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": data})
 }
+
+// GET /:status
+// Get all categories by status
+func GetCategoriesByStatus(c *gin.Context) {
+	status := c.Param("status")
+
+	data, err := service.GetCategoriesByStatus(status)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": data})
+}
