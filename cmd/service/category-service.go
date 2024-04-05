@@ -39,3 +39,14 @@ func GetCategoryById(id string) (entity.Category, error) {
 
 	return data, nil
 }
+
+func GetCategoriesByStatus(status string) ([]entity.Category, error) {
+	var data []entity.Category
+
+	if err := DB.Table(table).Where("status = ?", status).Find(&data).Error; err != nil {
+		log.Fatalf("Error while fetching categories: %v", err)
+		return nil, err
+	}
+
+	return data, nil
+}
