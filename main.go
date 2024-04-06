@@ -35,6 +35,7 @@ func (s *Server) Run(addr string) {
 	s.router.GET("/api/v1/category/all", controllers.GetCategories)
 	s.router.GET("/api/v1/category/status/:status", controllers.GetCategoriesByStatus)
 	s.router.POST("/api/v1/category/add", controllers.CreateCategory)
+	s.router.POST("/api/v1/category/update", controllers.UpdateCategory)
 	r := s.router.Run(addr)
 	if r != nil {
 		fmt.Println(r)
