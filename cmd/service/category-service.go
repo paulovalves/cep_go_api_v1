@@ -59,7 +59,7 @@ func CreateCategory(category entity.Category) (entity.Category, error) {
 	// }
 	if err := DB.Table(table).Create(&category).Error; err != nil {
 		log.Fatalf("Error while creating category: %v", err)
-		return category, nil
+		return category, err
 	}
 
 	return category, nil
