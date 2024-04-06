@@ -64,3 +64,12 @@ func CreateCategory(category entity.Category) (entity.Category, error) {
 
 	return category, nil
 }
+
+func UpdateCategory(category entity.Category) (entity.Category, error) {
+	if err := DB.Table(table).Update(&category).Error; err != nil {
+		log.Fatalf("Error while updating category: %v", err)
+		return category, err
+	}
+
+	return category, nil
+}
