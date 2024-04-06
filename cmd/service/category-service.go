@@ -50,3 +50,17 @@ func GetCategoriesByStatus(status string) ([]entity.Category, error) {
 
 	return data, nil
 }
+
+func CreateCategory(category entity.Category) (entity.Category, error) {
+	log.Printf("Category: %v", category)
+	// if utils.ValidateCategory(category) {
+	// 	log.Fatalf("Category is not valid %v", category)
+	// 	return entity.Category{}, errors.New("Category is not valid")
+	// }
+	if err := DB.Table(table).Create(&category).Error; err != nil {
+		log.Fatalf("Error while creating category: %v", err)
+		return category, nil
+	}
+
+	return category, nil
+}
