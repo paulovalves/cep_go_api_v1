@@ -66,7 +66,11 @@ func CreateCategory(category entity.Category) (entity.Category, error) {
 }
 
 func UpdateCategory(category entity.Category) (entity.Category, error) {
-	if err := DB.Table(table).Update(&category).Error; err != nil {
+	err := DB.Table(table).Where("id = ?", category.Id).Update(map[string]interface{}{
+		"name":   category.Name,
+		"status": category.Status,
+	}).Error
+	if err != nil {
 		log.Fatalf("Error while updating category: %v", err)
 		return category, err
 	}
