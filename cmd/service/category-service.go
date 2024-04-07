@@ -73,3 +73,12 @@ func UpdateCategory(category entity.Category) (entity.Category, error) {
 
 	return category, nil
 }
+
+func DeleteCategory(id string) (bool, error) {
+	if err := DB.Table(table).Delete(id).Error; err != nil {
+		log.Fatalf("Error while deleting category: %v", err)
+		return false, err
+	}
+
+	return true, nil
+}
