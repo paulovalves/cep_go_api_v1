@@ -6,20 +6,21 @@ import (
 	"service"
 	"utils"
 
-	"github.com/gin-gonic/gin"
 	entity "models/entity"
+
+	"github.com/gin-gonic/gin"
 )
 
 // GET /all
 // Get all categories
 func GetCategories(c *gin.Context) {
-	data, err := service.GetCategories()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	res := service.GetCategories()
+	if res.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"data": res})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": data})
+	c.JSON(http.StatusOK, gin.H{"data": res})
 }
 
 // GET /:id
@@ -31,12 +32,12 @@ func GetCategoryById(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid UUID"})
 		return
 	}
-	data, err := service.GetCategoryById(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
+	res := service.GetCategoryById(id)
+	if res.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"data": res})
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": data})
+	c.JSON(http.StatusOK, gin.H{"data": res})
 }
 
 // GET /:status
@@ -44,12 +45,12 @@ func GetCategoryById(c *gin.Context) {
 func GetCategoriesByStatus(c *gin.Context) {
 	status := c.Param("status")
 
-	data, err := service.GetCategoriesByStatus(status)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
+	res := service.GetCategoriesByStatus(status)
+	if res.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"data": res})
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": data})
+	c.JSON(http.StatusOK, gin.H{"data": res})
 }
 
 // POST
@@ -60,13 +61,13 @@ func CreateCategory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	data, err := service.CreateCategory(category)
-	if err != nil {
-		log.Fatalf("Error while creating category: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	res := service.CreateCategory(category)
+	if res.Error != nil {
+		log.Fatalf("Error while creating category: %v", res.Error)
+		c.JSON(http.StatusInternalServerError, gin.H{"data": res})
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": data})
+	c.JSON(http.StatusOK, gin.H{"data": res})
 }
 
 // UPDATE
@@ -77,11 +78,11 @@ func UpdateCategory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	data, err := service.UpdateCategory(category)
-	if err != nil {
-		log.Fatalf("Error while updating category: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
+	res := service.UpdateCategory(category)
+	if res.Error != nil {
+		log.Fatalf("Error while updating category: %v", res.Error)
+		c.JSON(http.StatusInternalServerError, gin.H{"data": res})
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": data})
+	c.JSON(http.StatusOK, gin.H{"data": res})
 }
