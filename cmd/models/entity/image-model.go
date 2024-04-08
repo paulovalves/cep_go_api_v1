@@ -7,7 +7,7 @@ type Image struct {
 	Alt         string    `json:"alt"`
 	Description string    `json:"description"`
 	Filename    string    `json:"filename"`
-	PublicId    uuid.UUID `json:"public_id"`
+	PublicId    string    `json:"public_id"`
 	Status      string    `json:"status"`
 	Title       string    `json:"title"`
 	Url         string    `json:"url"`

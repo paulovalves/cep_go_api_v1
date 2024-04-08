@@ -3,7 +3,6 @@ package service
 import (
 	"log"
 
-	"github.com/google/uuid"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	entity "models/entity"
 )
@@ -11,7 +10,7 @@ import (
 func GetAllImages() entity.ResponseModel {
 	var data []entity.Image
 
-	err := DB.Table(table).Find(&data).Error
+	err := DB.Table(ImagesTable).Find(&data).Error
 	if err != nil {
 		log.Fatalf("Error while getting images: %v", err)
 		return entity.SetResponse(
@@ -28,11 +27,11 @@ func GetAllImages() entity.ResponseModel {
 	)
 }
 
-func GetImageById(id uuid.UUID) entity.ResponseModel {
+func GetImageById(id string) entity.ResponseModel {
 	var data entity.Image
 
-	err := DB.Table(table).Where("id = ?", id).Find(&data)
-	if err != nil {
+	err := DB.Table(ImagesTable).Where("id = ?", id).Find(&data)
+	if err.Error != nil {
 		log.Fatalf("Error while getting image: %v", err)
 		return entity.SetResponse(
 			nil,
