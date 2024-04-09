@@ -162,4 +162,7 @@ CREATE TABLE public.logging (
 
 ALTER TABLE public.logging OWNER TO postgres;
 GRANT ALL ON TABLE public.logging TO postgres;
-CES public.roles(id);
+
+
+ALTER TABLE public.images ADD COLUMN category_id uuid NULL;
+ALTER TABLE public.images ADD CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES public.categories(id);

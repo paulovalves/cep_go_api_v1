@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 	"service"
 
@@ -20,9 +21,12 @@ func GetAllImages(c *gin.Context) {
 
 func GetImageById(c *gin.Context) {
 	id := c.Param("id")
+
 	res := service.GetImageById(id)
+	log.Printf("error: %v", res.Error)
 	if res.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"data": res})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": res})
