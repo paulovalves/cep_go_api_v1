@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"data"
 	"fmt"
 	"service"
@@ -10,14 +11,20 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	messaging "messaging"
 )
 
 func main() {
 	var DB *gorm.DB
 	db := data.Init(DB)
 	service.SetDB(db)
-	server := NewServer()
-	server.Run(":8080")
+	restServer := NewServer()
+
+	ctx := context.Background()
+	go restServer.Run(":8080")
+	go messaging.Connect(ctx)
+
+	select {}
 }
 
 func NewServer() *Server {

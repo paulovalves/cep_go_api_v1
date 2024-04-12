@@ -2,11 +2,11 @@ package models
 
 type ResponseModel struct {
 	Data    interface{}
-	Error   error
+	Error   interface{}
 	Message string
 }
 
-func SetResponse(data interface{}, err error, message string) ResponseModel {
+func SetResponse(data interface{}, err interface{}, message string) ResponseModel {
 	if err != nil {
 		return ResponseModel{Data: nil, Error: err, Message: message}
 	}
