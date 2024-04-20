@@ -56,7 +56,7 @@ func GetImageById(id string) entity.ResponseModel {
 	)
 }
 
-func GetImageByCategory(categoryId string) entity.ResponseModel {
+func GetImagesByCategory(categoryId string) entity.ResponseModel {
 	var data entity.Image
 	if !utils.IsValidUUID(categoryId) {
 		return entity.SetResponse(
