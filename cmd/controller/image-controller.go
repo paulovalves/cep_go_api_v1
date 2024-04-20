@@ -31,3 +31,12 @@ func GetImageById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": res})
 }
+
+func GetImagesByCategory(c *gin.Context) {
+	id := c.Param("id")
+
+	res := service.GetImagesByCategory(id)
+	if res.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"data": res})
+	}
+}
