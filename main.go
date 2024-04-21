@@ -8,10 +8,11 @@ import (
 
 	controllers "controller"
 
+	messaging "messaging"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	messaging "messaging"
 )
 
 func main() {
@@ -45,6 +46,7 @@ func (s *Server) Run(addr string) {
 	s.router.PUT("/api/v1/category/update", controllers.UpdateCategory)
 	s.router.GET("/api/v1/images/all", controllers.GetAllImages)
 	s.router.GET("/api/v1/images/id/:id", controllers.GetImageById)
+	s.router.GET("/api/v1/images/category/:id", controllers.GetImagesByCategory)
 	// s.router.DELETE("/api/v1/category/delete", controllers.DeleteCategory)
 	r := s.router.Run(addr)
 	if r != nil {
