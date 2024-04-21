@@ -1,3 +1,5 @@
+// Description: This file contains the model for the image entity.
+// Autor: Paulo Alves
 package models
 
 import "github.com/google/uuid"
