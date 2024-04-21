@@ -57,7 +57,7 @@ func GetImageById(id string) entity.ResponseModel {
 }
 
 func GetImagesByCategory(id string) entity.ResponseModel {
-	var data entity.Image
+	var data []entity.Image
 	if !utils.IsValidUUID(id) {
 		return entity.SetResponse(
 			nil,
@@ -88,7 +88,7 @@ func GetImagesByCategory(id string) entity.ResponseModel {
 }
 
 func GetImagesByStatus(status string) entity.ResponseModel {
-	var data entity.Image
+	var data []entity.Image
 	err := DB.Table(ImagesTable).Preload("Category").Where("status = ?", status).Find(&data).Error
 	if err != nil {
 		log.Printf("Error while getting image: %v", err)
