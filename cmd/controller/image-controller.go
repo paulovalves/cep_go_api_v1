@@ -9,9 +9,9 @@ package controller
 import (
 	"log"
 	"net/http"
+	"service"
 
 	entity "models/entity"
-	"service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -172,6 +172,55 @@ func CreateImage(c *gin.Context) {
 	}
 
 	res := service.CreateImage(image)
+	if res.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"data": res})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": res})
+}
+
+// UpdateImage function is responsible for handling the PUT /update request.
+// It binds the request body to an entity.Image struct and calls the UpdateImage service function
+// to update an image in the database. If the service function returns an error, the controller
+// function returns an error response. If the service function returns the image successfully, the
+// controller function returns a success response.
+// Param: {JSON} - entity.Image
+// Return: {JSON} - entity.ResponseModel
+func UpdateImage(c *gin.Context) {
+	var image entity.Image
+	if c.Request.ContentLength == 0 {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{"data": entity.SetResponse(nil, "Empty request body", "error")},
+		)
+		return
+	}
+	if err := c.ShouldBindJSON(&image); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"data": entity.SetResponse(nil, err.Error(), "error")})
+		return
+	}
+
+	res := service.UpdateImage(image)
+	if res.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"data": res})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": res})
+}
+
+// DeleteImage function is responsible for handling the DELETE /delete request.
+// It binds the request body to an entity.Image struct and calls the DeleteImage service function
+// to update the status of an image in the database to removido. If the service function returns an error,
+// the controller function returns an error response. If the service function returns the image successfully,
+// the controller function returns a success response.
+// Param: {JSON} - entity.Image
+// Return: {JSON} - entity.ResponseModel
+func DeleteImage(c *gin.Context) {
+	id := c.Param("id")
+
+	res := service.DeleteImage(id)
 	if res.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"data": res})
 		return

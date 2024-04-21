@@ -8,9 +8,9 @@ package service
 
 import (
 	"log"
+	"utils"
 
 	entity "models/entity"
-	"utils"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -180,6 +180,72 @@ func CreateImage(data entity.Image) entity.ResponseModel {
 	err := DB.Table(ImagesTable).Create(&data).Error
 	if err != nil {
 		log.Printf("Error while creating image: %v", err)
+		return entity.SetResponse(
+			nil,
+			err.Error(),
+			"error",
+		)
+	}
+
+	return entity.SetResponse(
+		data,
+		nil,
+		"success",
+	)
+}
+
+// UpdateImage function is responsible for updating an image in the database.
+// It takes the image data as a parameter and returns a response model containing
+// the image if the operation is successful. If the operation fails, it returns an error response.
+// Param: data - entity.Image - image data
+// Return: [entity.ResponseModel] - response model
+func UpdateImage(data entity.Image) entity.ResponseModel {
+	err := DB.Table(ImagesTable).Save(&data).Error
+	if err != nil {
+		log.Printf("Error while updating image: %v", err)
+		return entity.SetResponse(
+			nil,
+			err.Error(),
+			"error",
+		)
+	}
+
+	return entity.SetResponse(
+		data,
+		nil,
+		"success",
+	)
+}
+
+// DeleteImage function is responsible for updating the status og an image from the database to removido.
+// It takes the image data as a parameter and returns a response model containing
+// the image if the operation is successful. If the operation fails, it returns an error response.
+// Param: data - entity.Image - image data
+// Return: [entity.ResponseModel] - response model
+func DeleteImage(id string) entity.ResponseModel {
+	var data entity.Image
+	if !utils.IsValidUUID(id) {
+		return entity.SetResponse(
+			nil,
+			"Invalid UUID",
+			"error",
+		)
+	}
+
+	err := DB.Table(ImagesTable).Where("id = ?", id).Find(&data).Error
+	if err != nil {
+		log.Printf("Error while getting image: %v", err)
+		return entity.SetResponse(
+			nil,
+			err.Error(),
+			"error",
+		)
+	}
+
+	data.Status = "removido"
+	err = DB.Table(ImagesTable).Save(&data).Error
+	if err != nil {
+		log.Printf("Error while deleting image: %v", err)
 		return entity.SetResponse(
 			nil,
 			err.Error(),

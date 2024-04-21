@@ -5,12 +5,13 @@ package main
 
 import (
 	"context"
+	"data"
 	"fmt"
+	"service"
 
 	controllers "controller"
-	"data"
+
 	messaging "messaging"
-	"service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -72,6 +73,8 @@ func (s *Server) Run(addr string) {
 	s.router.GET("/api/v1/images/status/:status", controllers.GetImagesByStatus)
 	s.router.GET("/api/v1/images/description/:description", controllers.GetImagesByDescription)
 	s.router.POST("/api/v1/images/add", controllers.CreateImage)
+	s.router.PUT("/api/v1/images/update", controllers.UpdateImage)
+	s.router.DELETE("/api/v1/images/id/:id", controllers.DeleteImage)
 	r := s.router.Run(addr)
 	if r != nil {
 		fmt.Println(r)
