@@ -11,5 +11,6 @@ type Image struct {
 	Status      string    `json:"status"`
 	Title       string    `json:"title"`
 	Url         string    `json:"url"`
-	Category    Category  `json:"category"`
+	CategoryID  uuid.UUID `json:"category_id"`
+	Category    *Category `json:"category"    gorm:"foreignKey:CategoryID"`
 }

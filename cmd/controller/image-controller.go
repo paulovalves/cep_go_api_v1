@@ -3,6 +3,7 @@ package controller
 import (
 	"log"
 	"net/http"
+
 	"service"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,12 @@ import (
 func GetAllImages(c *gin.Context) {
 	res := service.GetAllImages()
 	if res.Error != nil {
+		if res.Error == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"data": res})
+			return
+		}
 		c.JSON(http.StatusBadRequest, gin.H{"data": res})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": res})
@@ -25,6 +31,10 @@ func GetImageById(c *gin.Context) {
 	res := service.GetImageById(id)
 	log.Printf("error: %v", res.Error)
 	if res.Error != nil {
+		if res.Error == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"data": res})
+			return
+		}
 		c.JSON(http.StatusBadRequest, gin.H{"data": res})
 		return
 	}
@@ -33,11 +43,16 @@ func GetImageById(c *gin.Context) {
 }
 
 func GetImagesByCategory(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("category_id")
 
 	res := service.GetImagesByCategory(id)
 	if res.Error != nil {
+		if res.Error == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"data": res})
+			return
+		}
 		c.JSON(http.StatusBadRequest, gin.H{"data": res})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": res})
@@ -48,7 +63,13 @@ func GetImagesByStatus(c *gin.Context) {
 
 	res := service.GetImagesByStatus(status)
 	if res.Error != nil {
+		if res.Error == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"data": res})
+			return
+		}
+
 		c.JSON(http.StatusBadRequest, gin.H{"data": res})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": res})

@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-	"data"
 	"fmt"
-	"service"
 
 	controllers "controller"
-
+	"data"
 	messaging "messaging"
+	"service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -46,7 +45,7 @@ func (s *Server) Run(addr string) {
 	s.router.PUT("/api/v1/category/update", controllers.UpdateCategory)
 	s.router.GET("/api/v1/images/all", controllers.GetAllImages)
 	s.router.GET("/api/v1/images/id/:id", controllers.GetImageById)
-	s.router.GET("/api/v1/images/category/:id", controllers.GetImagesByCategory)
+	s.router.GET("/api/v1/images/category/:category_id", controllers.GetImagesByCategory)
 	s.router.GET("/api/v1/images/status/:status", controllers.GetImagesByStatus)
 	// s.router.DELETE("/api/v1/category/delete", controllers.DeleteCategory)
 	r := s.router.Run(addr)

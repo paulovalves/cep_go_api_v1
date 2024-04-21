@@ -2,9 +2,9 @@ package service
 
 import (
 	"log"
-	"utils"
 
 	entity "models/entity"
+	"utils"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -12,12 +12,12 @@ import (
 func GetAllImages() entity.ResponseModel {
 	var data []entity.Image
 
-	err := DB.Table(ImagesTable).Find(&data).Error
+	err := DB.Table(ImagesTable).Preload("Category").Find(&data).Error
 	if err != nil {
-		log.Fatalf("Error while getting images: %v", err)
+		log.Printf("Error while getting images: %v", err)
 		return entity.SetResponse(
 			nil,
-			err,
+			err.Error(),
 			"Error while fetching images",
 		)
 	}
@@ -41,7 +41,7 @@ func GetImageById(id string) entity.ResponseModel {
 
 	err := DB.Table(ImagesTable).Where("id = ?", id).Find(&data).Error
 	if err != nil {
-		log.Fatalf("Error while getting image: %v", err)
+		log.Printf("Error while getting image: %v", err)
 		return entity.SetResponse(
 			nil,
 			err.Error(),
@@ -56,9 +56,9 @@ func GetImageById(id string) entity.ResponseModel {
 	)
 }
 
-func GetImagesByCategory(categoryId string) entity.ResponseModel {
+func GetImagesByCategory(id string) entity.ResponseModel {
 	var data entity.Image
-	if !utils.IsValidUUID(categoryId) {
+	if !utils.IsValidUUID(id) {
 		return entity.SetResponse(
 			nil,
 			"Invalid UUID",
@@ -66,7 +66,10 @@ func GetImagesByCategory(categoryId string) entity.ResponseModel {
 		)
 	}
 
-	err := DB.Table(ImagesTable).Where("category_id = ?", categoryId).Find(&data).Error
+	err := DB.Table(ImagesTable).
+		Where("category_id = ?", id).
+		Find(&data).
+		Error
 	if err != nil {
 		log.Printf("Error while getting images: %v", err)
 		return entity.SetResponse(
@@ -90,7 +93,7 @@ func GetImagesByStatus(status string) entity.ResponseModel {
 		log.Printf("Error while getting image: %v", err)
 		return entity.SetResponse(
 			nil,
-			err,
+			err.Error(),
 			"error",
 		)
 	}
