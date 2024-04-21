@@ -39,7 +39,7 @@ func GetImageById(id string) entity.ResponseModel {
 		)
 	}
 
-	err := DB.Table(ImagesTable).Where("id = ?", id).Find(&data).Error
+	err := DB.Table(ImagesTable).Preload("Category").Where("id = ?", id).Find(&data).Error
 	if err != nil {
 		log.Printf("Error while getting image: %v", err)
 		return entity.SetResponse(
@@ -67,6 +67,7 @@ func GetImagesByCategory(id string) entity.ResponseModel {
 	}
 
 	err := DB.Table(ImagesTable).
+		Preload("Category").
 		Where("category_id = ?", id).
 		Find(&data).
 		Error
@@ -88,7 +89,7 @@ func GetImagesByCategory(id string) entity.ResponseModel {
 
 func GetImagesByStatus(status string) entity.ResponseModel {
 	var data entity.Image
-	err := DB.Table(ImagesTable).Where("status = ?", status).Find(&data).Error
+	err := DB.Table(ImagesTable).Preload("Category").Where("status = ?", status).Find(&data).Error
 	if err != nil {
 		log.Printf("Error while getting image: %v", err)
 		return entity.SetResponse(
