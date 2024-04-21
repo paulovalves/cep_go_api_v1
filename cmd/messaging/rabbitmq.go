@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"service"
 
@@ -13,16 +14,16 @@ var (
 	queueName    = "events-queue"
 )
 
-func Connect(ctx context.Context) {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+func Connect(ctx context.Context) error {
+	conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
 	if err != nil {
-		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
+		return fmt.Errorf("failed to connect to RabbitMQ: %v", err)
 	}
 	defer conn.Close()
 
 	ch, err := conn.Channel()
 	if err != nil {
-		log.Fatalf("Failed to open a channel: %v", err)
+		return fmt.Errorf("failed to open a channel: %v", err)
 	}
 	defer ch.Close()
 
@@ -36,7 +37,7 @@ func Connect(ctx context.Context) {
 		nil,          // arguments
 	)
 	if err != nil {
-		log.Fatalf("Failed to declare an exchange: %v", err)
+		return fmt.Errorf("failed to declare an exchange: %v", err)
 	}
 
 	q, err := ch.QueueDeclare(
@@ -48,7 +49,7 @@ func Connect(ctx context.Context) {
 		nil,       // arguments
 	)
 	if err != nil {
-		log.Fatalf("Failed to declare a queue: %v", err)
+		return fmt.Errorf("failed to declare a queue: %v", err)
 	}
 
 	err = ch.QueueBind(
@@ -59,7 +60,7 @@ func Connect(ctx context.Context) {
 		nil,          // arguments
 	)
 	if err != nil {
-		log.Fatalf("Failed to bind a queue: %v", err)
+		return fmt.Errorf("failed to bind a queue: %v", err)
 	}
 
 	log.Printf(" [*] Waiting for logs. To exit press CTRL+C")
@@ -74,7 +75,7 @@ func Connect(ctx context.Context) {
 		nil,    // args
 	)
 	if err != nil {
-		log.Fatalf("Failed to register a consumer: %v", err)
+		return fmt.Errorf("failed to register a consumer: %v", err)
 	}
 
 	for d := range msgs {
@@ -90,11 +91,16 @@ func Connect(ctx context.Context) {
 		}
 		messageBytes := []byte(messagingService.Message)
 		// Publish the response to the exchange
-		PublishMessage(ch, messageBytes)
+		err := PublishMessage(ch, messageBytes)
+		if err != nil {
+			log.Printf("Failed to publish a message: %v", err)
+		}
 	}
+
+	return nil
 }
 
-func PublishMessage(ch *amqp.Channel, message []byte) {
+func PublishMessage(ch *amqp.Channel, message []byte) error {
 	err := ch.Publish(
 		exchangeName, // exchange
 		"",           // routing key
@@ -107,5 +113,7 @@ func PublishMessage(ch *amqp.Channel, message []byte) {
 	)
 	if err != nil {
 		log.Printf("Failed to publish a message: %v", err)
+		return err
 	}
+	return nil
 }

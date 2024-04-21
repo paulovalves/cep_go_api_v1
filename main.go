@@ -4,14 +4,11 @@
 package main
 
 import (
-	"context"
 	"data"
 	"fmt"
 	"service"
 
 	controllers "controller"
-
-	messaging "messaging"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -28,9 +25,9 @@ func main() {
 	service.SetDB(db)
 	restServer := NewServer()
 
-	ctx := context.Background()
+	// ctx := context.Background()
 	go restServer.Run(":8080")
-	go messaging.Connect(ctx)
+	// go messaging.Connect(ctx)
 
 	select {}
 }
