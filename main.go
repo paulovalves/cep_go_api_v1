@@ -48,6 +48,7 @@ func (s *Server) Run(addr string) {
 	s.router.GET("/api/v1/images/category/:category_id", controllers.GetImagesByCategory)
 	s.router.GET("/api/v1/images/status/:status", controllers.GetImagesByStatus)
 	s.router.GET("/api/v1/images/description/:description", controllers.GetImagesByDescription)
+	s.router.POST("/api/v1/images/add", controllers.CreateImage)
 	// s.router.DELETE("/api/v1/category/delete", controllers.DeleteCategory)
 	r := s.router.Run(addr)
 	if r != nil {

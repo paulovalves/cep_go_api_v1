@@ -128,3 +128,21 @@ func GetImagesByDescription(description string) entity.ResponseModel {
 		"success",
 	)
 }
+
+func CreateImage(data entity.Image) entity.ResponseModel {
+	err := DB.Table(ImagesTable).Create(&data).Error
+	if err != nil {
+		log.Printf("Error while creating image: %v", err)
+		return entity.SetResponse(
+			nil,
+			err.Error(),
+			"error",
+		)
+	}
+
+	return entity.SetResponse(
+		data,
+		nil,
+		"success",
+	)
+}

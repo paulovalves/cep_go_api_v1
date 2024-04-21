@@ -3,10 +3,10 @@ package controller
 import (
 	"log"
 	"net/http"
-	"service"
-	"utils"
 
 	entity "models/entity"
+	"service"
+	"utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -58,7 +58,7 @@ func GetCategoriesByStatus(c *gin.Context) {
 func CreateCategory(c *gin.Context) {
 	var category entity.Category
 	if err := c.ShouldBindJSON(&category); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"data": entity.SetResponse(nil, err.Error(), "error")})
 	}
 
 	res := service.CreateCategory(category)

@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	entity "models/entity"
 	"service"
 
 	"github.com/gin-gonic/gin"
@@ -85,6 +86,29 @@ func GetImagesByDescription(c *gin.Context) {
 			return
 		}
 
+		c.JSON(http.StatusBadRequest, gin.H{"data": res})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": res})
+}
+
+func CreateImage(c *gin.Context) {
+	var image entity.Image
+	if c.Request.ContentLength == 0 {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{"data": entity.SetResponse(nil, "Empty request body", "error")},
+		)
+		return
+	}
+	if err := c.ShouldBindJSON(&image); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"data": entity.SetResponse(nil, err.Error(), "error")})
+		return
+	}
+
+	res := service.CreateImage(image)
+	if res.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"data": res})
 		return
 	}
