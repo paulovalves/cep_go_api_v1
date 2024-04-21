@@ -39,6 +39,8 @@ func GetImagesByCategory(c *gin.Context) {
 	if res.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"data": res})
 	}
+
+	c.JSON(http.StatusOK, gin.H{"data": res})
 }
 
 func GetImagesByStatus(c *gin.Context) {
