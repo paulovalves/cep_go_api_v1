@@ -105,3 +105,26 @@ func GetImagesByStatus(status string) entity.ResponseModel {
 		"success",
 	)
 }
+
+func GetImagesByDescription(description string) entity.ResponseModel {
+	var data []entity.Image
+	err := DB.Table(ImagesTable).
+		Preload("Category").
+		Where("description LIKE ?", "%"+description+"%").
+		Find(&data).
+		Error
+	if err != nil {
+		log.Printf("Error while getting image: %v", err)
+		return entity.SetResponse(
+			nil,
+			err.Error(),
+			"error",
+		)
+	}
+
+	return entity.SetResponse(
+		data,
+		nil,
+		"success",
+	)
+}

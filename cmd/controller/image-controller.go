@@ -74,3 +74,20 @@ func GetImagesByStatus(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": res})
 }
+
+func GetImagesByDescription(c *gin.Context) {
+	description := c.Param("description")
+
+	res := service.GetImagesByDescription(description)
+	if res.Error != nil {
+		if res.Error == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"data": res})
+			return
+		}
+
+		c.JSON(http.StatusBadRequest, gin.H{"data": res})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": res})
+}
