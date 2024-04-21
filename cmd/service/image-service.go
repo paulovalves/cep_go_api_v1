@@ -82,3 +82,22 @@ func GetImagesByCategory(categoryId string) entity.ResponseModel {
 		"success",
 	)
 }
+
+func GetImagesByStatus(status string) entity.ResponseModel {
+	var data entity.Image
+	err := DB.Table(ImagesTable).Where("status = ?", status).Find(&data).Error
+	if err != nil {
+		log.Printf("Error while getting image: %v", err)
+		return entity.SetResponse(
+			nil,
+			err,
+			"error",
+		)
+	}
+
+	return entity.SetResponse(
+		data,
+		nil,
+		"success",
+	)
+}
