@@ -66,7 +66,7 @@ func GetImagesByCategory(categoryId string) entity.ResponseModel {
 		)
 	}
 
-	err := DB.Table(ImagesTable).Where("id = ?", categoryId).Find(&data).Error
+	err := DB.Table(ImagesTable).Where("category_id = ?", categoryId).Find(&data).Error
 	if err != nil {
 		log.Printf("Error while getting images: %v", err)
 		return entity.SetResponse(
