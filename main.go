@@ -5,10 +5,12 @@ package main
 
 import (
 	"data"
-	"fmt"
+	"log"
 	"service"
 
 	controllers "controller"
+
+	middleware "middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -55,26 +57,40 @@ type Server struct {
 * Param: addr - server address
  */
 func (s *Server) Run(addr string) {
-	// Category routes
-	s.router.GET("/api/v1/category/id/:id", controllers.GetCategoryById)
-	s.router.GET("/api/v1/category/all", controllers.GetCategories)
-	s.router.GET("/api/v1/category/status/:status", controllers.GetCategoriesByStatus)
-	s.router.POST("/api/v1/category/add", controllers.CreateCategory)
-	s.router.PUT("/api/v1/category/update", controllers.UpdateCategory)
-	// s.router.DELETE("/api/v1/category/delete", controllers.DeleteCategory)
+	g := gin.Default()
+	routes := g.Group("/api/v1")
+	{
+		publicRoutes := routes.Group("/public")
+		{
+			log.Printf("Public routes: %v", publicRoutes)
+			// Category routes
+			publicRoutes.GET("/category/id/:id", controllers.GetCategoryById)
+			publicRoutes.GET("/category/all", controllers.GetCategories)
+			publicRoutes.GET("/category/status/:status", controllers.GetCategoriesByStatus)
+			publicRoutes.GET("/images/all", controllers.GetAllImages)
+			publicRoutes.GET("/images/id/:id", controllers.GetImageById)
+			publicRoutes.GET("/images/category/:category_id", controllers.GetImagesByCategory)
+			publicRoutes.GET("/images/status/:status", controllers.GetImagesByStatus)
+			publicRoutes.GET("/images/description/:description", controllers.GetImagesByDescription)
+			publicRoutes.POST("/auth/register", controllers.Register)
+			publicRoutes.POST("/auth/login", controllers.Login)
+		}
 
-	// Image routes
-	s.router.GET("/api/v1/images/all", controllers.GetAllImages)
-	s.router.GET("/api/v1/images/id/:id", controllers.GetImageById)
-	s.router.GET("/api/v1/images/category/:category_id", controllers.GetImagesByCategory)
-	s.router.GET("/api/v1/images/status/:status", controllers.GetImagesByStatus)
-	s.router.GET("/api/v1/images/description/:description", controllers.GetImagesByDescription)
-	s.router.POST("/api/v1/images/add", controllers.CreateImage)
-	s.router.PUT("/api/v1/images/update", controllers.UpdateImage)
-	s.router.DELETE("/api/v1/images/id/:id", controllers.DeleteImage)
-	r := s.router.Run(addr)
-	if r != nil {
-		fmt.Println(r)
+		protectedRoutes := routes.Group("/protected")
+		{
+			protectedRoutes.POST("/category/add", controllers.CreateCategory)
+			protectedRoutes.PUT("/category/update", controllers.UpdateCategory)
+			// s.router.DELETE("/api/v1/category/delete", controllers.DeleteCategory)
+
+			// Image routes
+			protectedRoutes.POST("/images/add", controllers.CreateImage)
+			protectedRoutes.PUT("/images/update", controllers.UpdateImage)
+			protectedRoutes.DELETE("/images/id/:id", controllers.DeleteImage)
+		}
+		protectedRoutes.Use(middleware.AuthenticationMiddleware())
+	}
+	if err := g.Run(addr); err != nil {
+		log.Println(err)
 	}
 }
 

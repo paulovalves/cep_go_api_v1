@@ -8,3 +8,4 @@ go get github.com/google/uuid
 go get github.com/cloudinary/cloudinary-go/v2
 go get github.com/spf13/viper
 go get -u -v github.com/gorilla/mux
+go get -u github.com/golang-jwt/jwt/v5
