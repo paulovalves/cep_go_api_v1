@@ -26,26 +26,7 @@ services:
       app_net:
         ipv4_address: 172.20.0.3
 
-  keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-      DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
-      DB_DATABASE: postgres
-      DB_USER: postgres
-      DB_PASSWORD: secret
-    ports:
-      - "8082:8082"
-    depends_on:
-      - postgres
-    volumes:
-      - keycloak_data:/opt/jboss/keycloak/standalone/data
-    networks:
-      app_net:
-        ipv4_address: 172.20.0.5
-
+  
 networks:
   app_net:
     ipam:
@@ -55,5 +36,4 @@ networks:
 
 volumes:
   postgres_data:
-  keycloak_data:
 
